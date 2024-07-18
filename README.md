@@ -50,8 +50,6 @@ To properly configure and use the `http_request_example` indicator, follow these
 
   **Important Note**: If you are testing the indicator in a development environment, ensure that your development server is running on port 80. This is the default port used by MetaTrader 4 for web requests.
 
-Once you have completed these configuration steps, the `http_request_example` indicator should be ready to use. Load the indicator on a chart, and you will see the button appear in the bottom right corner. Clicking the button will trigger the API call using the configured settings.
-
 ## How to Use
 
 1. Call the `HttpRequest` function with the appropriate parameters:
