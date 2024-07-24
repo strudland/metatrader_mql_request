@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                  http_helper.mqh |
 //|                                                        Strudland |
-//|                                   https://precisionintrading.com |
+//|                                              https://bethor.tech |
 //+------------------------------------------------------------------+
 #property copyright "Strudland"
-#property link      "https://precisionintrading.com"
+#property link      "https://bethor.tech"
 #property version "1.1"
 #property strict
 

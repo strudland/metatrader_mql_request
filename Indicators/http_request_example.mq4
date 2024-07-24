@@ -15,7 +15,7 @@ input string   API_TOKEN="API_TOKEN";
 input color    button_color=clrPaleGreen;
 input color    button_background=clrBlack;
 
-#define CALL_API_BUTTON_NANME "callApiButton"
+#define CALL_API_BUTTON_NAME "callApiButton"
 
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
@@ -44,15 +44,15 @@ void OnChartEvent(const int id,
                   const double &dparam,
                   const string &sparam)
   {
-     if(id == CHARTEVENT_OBJECT_CLICK && sparam == CALL_API_BUTTON_NANME)
+     if(id == CHARTEVENT_OBJECT_CLICK && sparam == CALL_API_BUTTON_NAME)
      {
       // Change button state to indicate it's pressed
-      ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_STATE, 1);
+      ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_STATE, 1);
 
       CallApi();
 
       // Reset button state after API call
-      ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_STATE, 0);
+      ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_STATE, 0);
      }
 
   }
@@ -198,21 +198,21 @@ void SendScreenshot(string url, string api_token, int alert_id) {
 //+------------------------------------------------------------------+
 void CreateButton()
 {
-    if (!ObjectCreate(0, CALL_API_BUTTON_NANME, OBJ_BUTTON, 0, 0, 0))
+    if (!ObjectCreate(0, CALL_API_BUTTON_NAME, OBJ_BUTTON, 0, 0, 0))
     {
         Print("Failed to create button!");
         return;
     }
-    ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_CORNER, 3); // Lower right corner
-    ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_XDISTANCE, 40);
-    ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_YDISTANCE, 40);
-    ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_XSIZE, 35); // Round button
-    ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_YSIZE, 33); // Round button
-    ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_COLOR, button_color);
-    ObjectSetText(CALL_API_BUTTON_NANME,CharToStr(232),8,"Wingdings",button_color);
-    ObjectSetString(0,CALL_API_BUTTON_NANME,OBJPROP_FONT,"Wingdings");
-    ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_FONTSIZE, 20); // Increase font size for icon
-    ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_BGCOLOR, button_background); // Make button raised
+    ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_CORNER, 3); // Lower right corner
+    ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_XDISTANCE, 40);
+    ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_YDISTANCE, 40);
+    ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_XSIZE, 35); // Round button
+    ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_YSIZE, 33); // Round button
+    ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_COLOR, button_color);
+    ObjectSetText(CALL_API_BUTTON_NAME,CharToStr(232),8,"Wingdings",button_color);
+    ObjectSetString(0,CALL_API_BUTTON_NAME,OBJPROP_FONT,"Wingdings");
+    ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_FONTSIZE, 20); // Increase font size for icon
+    ObjectSetInteger(0, CALL_API_BUTTON_NAME, OBJPROP_BGCOLOR, button_background); // Make button raised
 }
 
 bool IsHttpResponseSuccess(int response_code)
