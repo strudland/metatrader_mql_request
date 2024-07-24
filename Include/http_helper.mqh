@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Strudland"
 #property link      "https://precisionintrading.com"
-#property version "1.0"
+#property version "1.1"
 #property strict
 
 #import "Wininet.dll"

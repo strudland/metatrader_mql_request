@@ -7,7 +7,7 @@
 
 #property copyright "Strudland"
 #property link      "https://bethor.tech"
-#property version   "1.00"
+#property version   "1.10"
 #property indicator_chart_window
 
 input string   API_URL="http://localhost:80/api/pairs/";
