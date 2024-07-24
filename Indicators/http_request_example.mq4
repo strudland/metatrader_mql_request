@@ -71,7 +71,9 @@ void CallApi()
    uchar post_data[];
    string response;
 
-   bool success = HttpRequest("GET", url, headers, post_data, response);
+   int response_code;
+   bool success = HttpRequest("GET", url, headers, post_data, response, response_code);
+   bool response_code_successful = IsHttpResponseSuccess(response_code);
    if (success)
    {
        Print(response);
@@ -93,7 +95,8 @@ void SendJSONPostRequest(string url, string api_token, string json_payload)
     StringToCharArray(json_payload, post_data, 0, StringLen(json_payload));
 
     string response;
-    bool success = HttpRequest("POST", url, headers, post_data, response);
+    int response_code;
+    bool success = HttpRequest("POST", url, headers, post_data, response, response_code);
 
     if (success)
     {
@@ -179,7 +182,8 @@ void SendScreenshot(string url, string api_token, int alert_id) {
     headers += "Content-Type: multipart/form-data; boundary=" + boundary + "\r\n";
 
     string response;
-    bool success = HttpRequest("POST", url, headers, data, response);
+    int response_code;
+    bool success = HttpRequest("POST", url, headers, data, response, response_code);
 
     if (success) {
         Print("Screenshot uploaded successfully. Response: ", response);
@@ -209,4 +213,10 @@ void CreateButton()
     ObjectSetString(0,CALL_API_BUTTON_NANME,OBJPROP_FONT,"Wingdings");
     ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_FONTSIZE, 20); // Increase font size for icon
     ObjectSetInteger(0, CALL_API_BUTTON_NANME, OBJPROP_BGCOLOR, button_background); // Make button raised
+}
+
+bool IsHttpResponseSuccess(int response_code)
+{
+    // We get 2 for ok responses (200-299), 4 (400 -> ), 5 (500 ->)
+    return (response_code == 2);
 }

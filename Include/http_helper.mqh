@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                  http_helper.mqh |
 //|                                                        Strudland |
-//|                                              https://bethor.tech |
+//|                                   https://precisionintrading.com |
 //+------------------------------------------------------------------+
 #property copyright "Strudland"
-#property link      "https://bethor.tech"
+#property link      "https://precisionintrading.com"
 #property version "1.0"
 #property strict
 
@@ -16,12 +16,15 @@ int HttpSendRequestW(int hRequest, string sHeaders, int lHeadersLength, uchar& s
 int InternetReadFile(int hFile, uchar& sBuffer[], int lNumBytesToRead, int& lNumberOfBytesRead);
 int InternetCloseHandle(int hInet);
 int InternetSetOptionW(int hInternet, int dwOption, int& lpBuffer, int dwBufferLength);
+bool HttpQueryInfoW(int hRequest, int dwInfoLevel, uchar& lpBuffer[], int& lpdwBufferLength, int& lpdwIndex);
 #import
+
+#define MAX_RESPONSE_SIZE 1048576
 
 //+------------------------------------------------------------------+
 //| General function for creating HTTP requests                      |
 //+------------------------------------------------------------------+
-bool HttpRequest(string method, string url, string headers, uchar &post_data[], string &response)
+bool HttpRequest(string method, string url, string headers, uchar &post_data[], string &response, int &response_code)
 {
     bool success = false;
     int hInternet = InternetOpenW("MyAgent", 0, NULL, NULL, 0);
@@ -127,25 +130,53 @@ bool HttpRequest(string method, string url, string headers, uchar &post_data[], 
         return false;
     }
     
+   // Check the response code
+   uchar status_buffer[64];
+   int buffer_length = ArraySize(status_buffer);
+   int index = 0;
+   if (!HttpQueryInfoW(hRequest, 19, status_buffer, buffer_length, index)) // 19 is HTTP_QUERY_STATUS_CODE
+   {
+       Print("HttpRequest: Error in HttpQueryInfoW - ", GetLastError());
+       InternetCloseHandle(hRequest);
+       InternetCloseHandle(hConnect);
+       InternetCloseHandle(hInternet);
+       return false;
+   }
+   
+    response_code = (int)StringToInteger(CharArrayToString(status_buffer, 0, buffer_length));
     uchar buffer[];
     int bytes_read = 0;
     int total_bytes_read = 0;
     
     do
     {
-        ArrayResize(buffer, 1024);
-        if (!InternetReadFile(hRequest, buffer, 1024, bytes_read))
-        {
-            Print("HttpRequest: Error in InternetReadFile - ", GetLastError());
-            break;
-        }
-        
-        if (bytes_read > 0)
-        {
-            Print(response);
-            response += CharArrayToString(buffer, 0, bytes_read);
-            total_bytes_read += bytes_read;
-        }
+       ArrayResize(buffer, 1024);
+       if (!InternetReadFile(hRequest, buffer, 1024, bytes_read))
+       {
+           Print("HttpRequest: Error in InternetReadFile - ", GetLastError());
+           response = "HttpRequest: Error in InternetReadFile - " + GetLastError();
+           break;
+       }
+       
+       if (bytes_read > 0)
+       {
+           response += CharArrayToString(buffer, 0, bytes_read);
+           total_bytes_read += bytes_read;
+           
+           // Check if response starts with DOCTYPE (indicating an error)
+           if (StringSubstr(response, 0, 9) == "<!DOCTYPE")
+           {
+               Print("Received an HTML error response");
+               break;
+           }
+           
+           // Break if response size exceeds the maximum
+           if (total_bytes_read > MAX_RESPONSE_SIZE)
+           {
+               Print("Response exceeds maximum size limit");
+               break;
+           }
+       }
     }
     while (bytes_read > 0);
     
